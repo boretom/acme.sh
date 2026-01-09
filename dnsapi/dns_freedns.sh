@@ -159,7 +159,7 @@ _freedns_login() {
     return 1
   fi
 
-  cookies="$(grep -i '^Set-Cookie.*dns_cookie.*$' "$HTTP_HEADER" | _head_n 1 | tr -d "\r\n" | cut -d " " -f 2)"
+  cookies="$(grep -Ei '^Set-Cookie.*dns_cookie.*$' "$HTTP_HEADER" | _head_n 1 | tr -d "\r\n" | cut -d " " -f 2)"
 
   # if cookies is not empty then logon successful
   if [ -z "$cookies" ]; then
@@ -305,7 +305,7 @@ _freedns_domain_id() {
     fi
 
     domain_id="$(echo "$htmlpage" | tr -d " \t\r\n\v\f" | sed 's/<tr>/@<tr>/g' | tr '@' '\n' |
-      grep "<td>$search_domain</td>\|<td>$search_domain(.*)</td>" |
+      grep -E "<td>$search_domain</td>|<td>$search_domain(.*)</td>" |
       sed -n 's/.*\(edit\.php?edit_domain_id=[0-9a-zA-Z]*\).*/\1/p' |
       cut -d = -f 2)"
     # The above beauty extracts domain ID from the html page...
